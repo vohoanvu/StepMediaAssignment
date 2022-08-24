@@ -13,25 +13,20 @@ namespace StepMediaAssignment.Models.Service
             var result = new List<long>();
 
             numbers.Sort();
-            //Grab the top 10s and removed them from original list
-            var largest10s = GetLargestTens(numbers);
-            numbers.RemoveAll(item => largest10s.Contains(item));
 
-            //Grab the second top 10s and removed them from original list
-            var secondLargest10s = GetLargestTens(numbers);
-            numbers.RemoveAll(item => secondLargest10s.Contains(item));
+            var largest10 = GrabTop10LargestAndRemoveFromList(numbers);
 
-            //Grab the third top 10s and removed them from original list
-            var thirdLargest10s = GetLargestTens(numbers);
-            numbers.RemoveAll(item => thirdLargest10s.Contains(item));
+            var secondLargest10 = GrabTop10LargestAndRemoveFromList(numbers);
+
+            var thirdLargest10 = GrabTop10LargestAndRemoveFromList(numbers);
 
             var remainingOthers = numbers.ToArray();
 
             if (remainingOthers.Length == 0)
             {
-                result.AddRange(largest10s);
-                result.AddRange(secondLargest10s);
-                result.AddRange(thirdLargest10s);
+                result.AddRange(largest10);
+                result.AddRange(secondLargest10);
+                result.AddRange(thirdLargest10);
 
                 return result;
             }
@@ -39,11 +34,11 @@ namespace StepMediaAssignment.Models.Service
             var others1 = remainingOthers.Take(remainingOthers.Length/2).ToList();
             var others2 = remainingOthers.Skip(remainingOthers.Length/2).ToList();
 
-            result.AddRange(secondLargest10s); //second largest group goes in the list first
+            result.AddRange(secondLargest10); //second largest group goes in the list first
             result.AddRange(others1);
-            result.AddRange(largest10s);
+            result.AddRange(largest10);
             result.AddRange(others2);
-            result.AddRange(thirdLargest10s);
+            result.AddRange(thirdLargest10);
 
             return result;
         }
@@ -66,6 +61,15 @@ namespace StepMediaAssignment.Models.Service
             }
             
             return result;
+        }
+
+        private static List<long> GrabTop10LargestAndRemoveFromList(List<long> originalList)
+        {
+            var largest10 = GetLargestTens(originalList);
+
+            originalList.RemoveAll(i => largest10.Contains(i));
+
+            return largest10;
         }
     }
 }
